@@ -1,0 +1,63 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+from model import Perceptron
+from sklearn.neural_network import MLPClassifier
+from sklearn.datasets import make_moons
+
+# classification
+
+X, y = make_moons(n_samples=200, noise=0.2, random_state=42)
+X, y = X.T, y.reshape(1, -1)
+
+configuration = {
+    'type': 'classifier',
+    'units': [3, 5, 4],
+    'activations': ['tanh'] * 3,
+    'alpha': 1,
+    'lambda_1': 1e-2,
+    'lambda_2': 1e-2,
+    'iterations': int(1e4),
+    'verbose': True
+}
+model = Perceptron(configuration)
+model.train_model(X, y)
+
+mlpc = MLPClassifier(
+    hidden_layer_sizes=(10,),
+    activation='tanh',
+    learning_rate_init=1,
+    learning_rate='constant',
+    alpha=1e-2,  # regularization
+    n_iter_no_change=int(1e4), # iterations
+    max_iter=int(1e5),
+    tol=1,
+    verbose=False)
+mlpc.fit(X.T, y.T)
+
+x_min, x_max = X[0, :].min() - 1, X[0, :].max() + 1
+y_min, y_max = X[1, :].min() - 1, X[1, :].max() + 1
+xx, yy = np.meshgrid(np.linspace(x_min, x_max, 200),
+                     np.linspace(y_min, y_max, 200))
+mesh = np.c_[xx.ravel(), yy.ravel()].T
+
+Z1 = model.predict_model(mesh)
+Z1 = Z1.reshape(xx.shape)
+Z2 = mlpc.predict(mesh.T)
+Z2 = Z2.reshape(xx.shape)
+
+fig, axs = plt.subplots(1, 2, figsize=(10, 5))
+axs[0].contourf(xx, yy, Z1, cmap='Spectral', alpha=0.8)
+axs[0].scatter(X[0, :], X[1, :], c=y.ravel(), cmap='Spectral')
+axs[0].set_title('Current')
+axs[0].set_xticks([])
+axs[0].set_yticks([])
+axs[1].contourf(xx, yy, Z2, cmap='Spectral', alpha=0.8)
+axs[1].scatter(X[0, :], X[1, :], c=y.ravel(), cmap='Spectral')
+axs[1].set_title('Scikit')
+axs[1].set_xticks([])
+axs[1].set_yticks([])
+plt.xticks([])
+plt.yticks([])
+plt.tight_layout()
+plt.show()

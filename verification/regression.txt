@@ -1,0 +1,55 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+from model import Perceptron
+from sklearn.neural_network import MLPRegressor
+
+# regression
+
+m = 200
+X = np.linspace(0, 1, m).reshape(1, m)
+noise = np.random.normal(0, 5, m)
+coefficients = np.array([10, 1, 1])
+y = np.polyval(coefficients, X) + noise
+y = y.reshape(1, m)
+
+print("X shape:", X.shape)
+print("y shape:", y.shape)
+
+configuration = {
+    'type': 'regressor',
+    'units': [10],
+    'activations': ['relu'],
+    'alpha': 1e-3,
+    'lambda_1': 1e-3,
+    'lambda_2': 1e-3,
+    'iterations': int(1e5),
+    'verbose': True
+}
+model = Perceptron(configuration)
+model.train_model(X, y)
+
+mlpr = MLPRegressor(
+    hidden_layer_sizes=(10,),
+    activation='relu',
+    learning_rate_init=1e-3,
+    learning_rate='constant',
+    alpha=1e-3,  # regularization
+    n_iter_no_change=int(1e5), # iterations
+    max_iter=int(1e6),
+    tol=1.,
+    verbose=False
+    )
+mlpr.fit(X.T, y.T)
+
+y1 = model.predict_model(X)
+y2 = mlpr.predict(X.T).reshape(1, m)
+
+plt.scatter(X, y)
+plt.scatter(X, y1, label='Current')
+plt.scatter(X, y2, label='Scikit')
+plt.xticks([])
+plt.yticks([])
+plt.legend()
+plt.tight_layout()
+plt.show()
