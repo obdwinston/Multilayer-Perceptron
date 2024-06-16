@@ -1,6 +1,6 @@
 # Multilayer Perceptron
 
-![image](https://github.com/obdwinston/Multilayer-Perceptron/assets/104728656/11b66749-aa08-446c-a721-76b4853a136f)
+![image](https://github.com/obdwinston/Multilayer-Perceptron/assets/104728656/ff510b83-b871-405d-9313-f5566d9430b6)
 
 Multilayer perceptron to solve classification and regression problems.
 
