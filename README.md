@@ -5,7 +5,7 @@
 Multilayer perceptron to solve classification and regression problems.
 
 - [x] Single/Multioutput Regression
-- [x] Logistic/Multilabel/Multiclass Classification
+- [x] Binary/Multilabel/Multiclass Classification
 - [x] L1/L2 Regularisation
 - [ ] Dropout Regularisation
 - [ ] Mini-Batch Gradient Descent (GD)
