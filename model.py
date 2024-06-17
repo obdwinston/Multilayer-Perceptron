@@ -192,6 +192,11 @@ class Perceptron:
         s_corrected = {}
         L = len(self.activations)
         for l in range(1, L):
+
+            # vanilla gradient descent
+            # if (self.beta_1 == 0 and self.beta_2 == 0):
+            #     self.parameters['W' + str(l)] -= self.alpha * self.gradients['dW' + str(l)]
+            #     self.parameters['b' + str(l)] -= self.alpha * self.gradients['db' + str(l)]
             
             # momentum gradient descent
             self.v["dW" + str(l)] = self.beta_1 * self.v["dW" + str(l)] + (1 - self.beta_1) * self.gradients["dW" + str(l)]
