@@ -122,7 +122,7 @@ class Perceptron:
             elif activation == 'softmax':
                 E = np.exp(Z - np.max(Z, axis=0, keepdims=True))
                 S = E / np.sum(E, axis=0, keepdims=True)
-                return S - self.y # dZ since dA set to 1
+                return S - self.y # dAdZ = dZ since dA set to 1 for softmax
             else: return np.ones_like(A) # linear
         
         A = self.AL
