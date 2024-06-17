@@ -11,13 +11,15 @@ class Perceptron:
         self.units = configuration.get('units', [10])
         self.activations = configuration.get('activations', ['relu'])
         self.alpha = configuration.get('alpha', 1e-2)
-        self.lambda_1 = configuration.get('lambda_1', 1e-3)
-        self.lambda_2 = configuration.get('lambda_2', 1e-3)
+        self.lambda_1 = configuration.get('lambda_1', 1e-3) # L1 regularisation
+        self.lambda_2 = configuration.get('lambda_2', 1e-3) # L2 regularisation
+        self.beta_1 = configuration.get('beta_1', 0.9) # momentum gradient descent
+        self.beta_2 = configuration.get('beta_2', 0.99) # root-mean-square propagation
         self.batches = configuration.get('batches', 1)
         self.iterations = configuration.get('iterations', int(1e3))
         self.verbose = configuration.get('verbose', True)
 
-        self.epsilon = 1e-10
+        self.epsilon = 1e-8
 
     def initialise_model(self, X, y):
         
@@ -40,6 +42,9 @@ class Perceptron:
         else: # regressor
             self.activations = ['linear'] + self.activations + ['linear']
 
+        self.t = 1
+        self.v = {}
+        self.s = {}
         self.parameters = {}
         self.gradients = {}
         self.caches = []
@@ -49,6 +54,12 @@ class Perceptron:
         for l in range(1, L):
             self.parameters['W' + str(l)] = np.random.randn(self.units[l], self.units[l - 1]) / np.sqrt(self.units[l - 1]) # He initialisation
             self.parameters['b' + str(l)] = np.zeros((self.units[l], 1))
+        
+        for l in range(1, L):
+            self.v["dW" + str(l)] = np.zeros_like(self.parameters["W" + str(l)])
+            self.v["db" + str(l)] = np.zeros_like(self.parameters["b" + str(l)])
+            self.s["dW" + str(l)] = np.zeros_like(self.parameters["W" + str(l)])
+            self.s["db" + str(l)] = np.zeros_like(self.parameters["b" + str(l)])
     
     def create_batches(self):
 
@@ -177,10 +188,28 @@ class Perceptron:
         
     def update_parameters(self):
         
+        v_corrected = {}
+        s_corrected = {}
         L = len(self.activations)
         for l in range(1, L):
-            self.parameters['W' + str(l)] -= self.alpha * self.gradients['dW' + str(l)]
-            self.parameters['b' + str(l)] -= self.alpha * self.gradients['db' + str(l)]
+            
+            # momentum gradient descent
+            self.v["dW" + str(l)] = self.beta_1 * self.v["dW" + str(l)] + (1 - self.beta_1) * self.gradients["dW" + str(l)]
+            self.v["db" + str(l)] = self.beta_1 * self.v["db" + str(l)] + (1 - self.beta_1) * self.gradients["db" + str(l)]
+            v_corrected["dW" + str(l)] = self.v["dW" + str(l)] / (1 - self.beta_1 ** self.t)
+            v_corrected["db" + str(l)] = self.v["db" + str(l)] / (1 - self.beta_1 ** self.t)
+
+            # root-mean-square propagation
+            self.s["dW" + str(l)] = self.beta_2 * self.s["dW" + str(l)] + (1 - self.beta_2) * np.square(self.gradients["dW" + str(l)])
+            self.s["db" + str(l)] = self.beta_2 * self.s["db" + str(l)] + (1 - self.beta_2) * np.square(self.gradients["db" + str(l)])
+            s_corrected["dW" + str(l)] = self.s["dW" + str(l)] / (1 - self.beta_2 ** self.t)
+            s_corrected["db" + str(l)] = self.s["db" + str(l)] / (1 - self.beta_2 ** self.t)
+
+            # update parameters
+            self.parameters['W' + str(l)] -= self.alpha * v_corrected["dW" + str(l)] / (np.sqrt(s_corrected["dW" + str(l)]) + self.epsilon)
+            self.parameters['b' + str(l)] -= self.alpha * v_corrected["db" + str(l)] / (np.sqrt(s_corrected["db" + str(l)]) + self.epsilon)
+        
+        self.t += 1
     
     def train_model(self, X, y):
 
