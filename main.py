@@ -38,6 +38,7 @@ configuration = {
     'alpha': 1e-2,
     'lambda_1': 3e-1,
     'lambda_2': 3e-1,
+    'batches': 1,
     'iterations': int(1e5),
     'verbose': True
 }

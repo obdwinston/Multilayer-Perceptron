@@ -10,21 +10,22 @@ class Perceptron:
         self.type = configuration.get('type', 'classifier')
         self.units = configuration.get('units', [10])
         self.activations = configuration.get('activations', ['relu'])
-        self.alpha = configuration.get('alpha', 1e-3)
+        self.alpha = configuration.get('alpha', 1e-2)
         self.lambda_1 = configuration.get('lambda_1', 1e-3)
         self.lambda_2 = configuration.get('lambda_2', 1e-3)
+        self.batches = configuration.get('batches', 1)
         self.iterations = configuration.get('iterations', int(1e3))
         self.verbose = configuration.get('verbose', True)
 
         self.epsilon = 1e-10
 
     def initialise_model(self, X, y):
-
-        self.X = X
-        self.y = y
-        self.nx, self.m = self.X.shape
-        self.ny, self.m = self.y.shape
-        self.nc = int(np.max(np.sum(self.y, axis=0, keepdims=True)))
+        
+        self.data = (X, y)
+        self.nx, mx = X.shape
+        self.ny, my = y.shape
+        assert mx == my, 'Number of examples of X and y must be equal'
+        self.nc = int(np.max(np.sum(y, axis=0, keepdims=True)))
         
         self.units = [self.nx] + self.units + [self.ny]
 
@@ -39,7 +40,6 @@ class Perceptron:
         else: # regressor
             self.activations = ['linear'] + self.activations + ['linear']
 
-        self.AL = np.zeros((self.ny, self.m))
         self.parameters = {}
         self.gradients = {}
         self.caches = []
@@ -50,6 +50,31 @@ class Perceptron:
             self.parameters['W' + str(l)] = np.random.randn(self.units[l], self.units[l - 1]) / np.sqrt(self.units[l - 1]) # He initialisation
             self.parameters['b' + str(l)] = np.zeros((self.units[l], 1))
     
+    def create_batches(self):
+
+        X = self.data[0]
+        y = self.data[1]
+        _, m = X.shape
+        
+        permutation = list(np.random.permutation(m))
+        X_shuffled = X[:, permutation]
+        y_shuffled = y[:, permutation]
+
+        batch_size = m // self.batches
+        assert batch_size >= 1, 'Batch size must be greater than or equal to 1'
+
+        mini_batches = []
+        for i in range(self.batches):
+            start = i * batch_size
+            end = start + batch_size
+
+            X_batch = X_shuffled[:, start:end]
+            y_batch = y_shuffled[:, start:end]
+            
+            mini_batches.append((X_batch, y_batch))
+        
+        return mini_batches
+
     def forward_propagation(self):
 
         self.caches = [] # reset cache
@@ -62,7 +87,7 @@ class Perceptron:
                 E = np.exp(Z - np.max(Z, axis=0, keepdims=True))
                 return E / np.sum(E, axis=0, keepdims=True)
             else: return Z # linear
-        
+                
         A_prev = self.X
         L = len(self.activations)
         for l in range(1, L):
@@ -111,7 +136,7 @@ class Perceptron:
         if np.isnan(cost):
             sys.exit()
         
-        self.costs.append(cost)   
+        return cost
 
     def backward_propagation(self):
 
@@ -161,13 +186,22 @@ class Perceptron:
 
         self.initialise_model(X, y)
 
+        mini_batches = self.create_batches()
+
         for i in range(self.iterations):
-            self.forward_propagation()
-            self.compute_cost()
-            self.backward_propagation()
-            self.update_parameters()
+            cost = 0
+            for mini_batch in mini_batches:
+                self.X, self.y = mini_batch
+                _, self.m = self.X.shape
+
+                self.forward_propagation()
+                self.backward_propagation()
+                self.update_parameters()
+
+                cost += self.compute_cost()
 
             if (i % 1000 == 0):
+                self.costs.append(cost / self.batches)
                 print(f'Cost at Iteration {i}: {self.costs[-1]: .10f}')
 
     def predict_model(self, X):
