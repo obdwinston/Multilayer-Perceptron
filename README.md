@@ -8,7 +8,7 @@ Multilayer perceptron to solve classification and regression problems.
 - [ ] Dropout Regularisation
 - [x] Mini-Batch Gradient Descent (GD)
 - [x] Adam Optimisation (Momentum GD + RMS Propagation)
-- [ ] Learning Rate Decay
+- [x] Learning Rate Decay
 - [ ] Batch Normalisation
 - [ ] and more...
 
@@ -24,3 +24,8 @@ _17 Jun 24: Mini-batch gradient descent was added. Faster convergence rates were
 
 ![image](https://github.com/obdwinston/Multilayer-Perceptron/assets/104728656/75c77fe2-5834-4f3d-bd87-aa01ea922d87)
 _18 Jun 24: Adam optimisation was added. All Adam cases converged much faster to lower costs, and peak accuracy was achieved with the first Adam case (β₁ = 0.9, β₂ = 0.99). Of note, zero betas do not correspond to vanilla gradient descent, due to a resulting scaling factor acting on the learning rate that is dependent on both epsilon (small value to prevent division by zero in Adam) and the gradient itself:_ $W=W-\alpha(\frac{1}{|dW| + \epsilon})dW$.
+
+## Learning Rate Decay
+
+![image](https://github.com/obdwinston/Multilayer-Perceptron/assets/104728656/2e5764f1-a424-42d3-9b6d-26a3d011bbcb)
+_19 Jun 24: Learning rate decay was added. Exponential decay resulted in the slowest convergence rate due to the rapid decrease in learning rate. Scheduled decay had a fast initial convergence rate, while gradually reducing (or relaxing) the learning rate in a step-wise manner._
