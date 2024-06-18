@@ -22,4 +22,4 @@ _17 Jun 24: Mini-batch gradient descent was added. Faster convergence rates were
 
 ## Adam Optimisation
 
-_18 Jun 24: Adam optimisation was added. All cases with Adam (non-zero betas) converged much faster to lower costs, and peak accuracy was achieved with the first Adam case (β₁ = 0.9, β₂ = 0.99). Of note, zero betas do not correspond to vanilla gradient descent, due to a scaling factor acting on the learning rate that is dependent on both epsilon (small value to prevent division by zero in Adam) and the gradient itself:_ $W=W-\alpha(\frac{1}{|dW| + \epsilon})dW$.
+_18 Jun 24: Adam optimisation was added. All Adam cases converged much faster to lower costs, and peak accuracy was achieved with the first Adam case (β₁ = 0.9, β₂ = 0.99). Of note, zero betas do not correspond to vanilla gradient descent, due to a scaling factor acting on the learning rate that is dependent on both epsilon (small value to prevent division by zero in Adam) and the gradient itself:_ $W=W-\alpha(\frac{1}{|dW| + \epsilon})dW$.
