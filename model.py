@@ -7,17 +7,20 @@ class Perceptron:
     
     def __init__(self, configuration):
 
-        self.type = configuration.get('type', 'classifier')
-        self.units = configuration.get('units', [10])
-        self.activations = configuration.get('activations', ['relu'])
-        self.alpha = configuration.get('alpha', 1e-2)
+        self.type = configuration.get('type', 'classifier') # model type {'classifier', 'regressor'}
+        self.units = configuration.get('units', [10]) # hidden units
+        self.activations = configuration.get('activations', ['relu']) # hidden activations {'relu', 'tanh', 'sigmoid', 'linear'}
+        self.alpha_0 = configuration.get('alpha_0', 0.01) # initial learning rate
+        self.decay = configuration.get('decay', None) # learning decay type {None, 'exponential', 'scheduled'}
+        self.decay_rate = configuration.get('decay_rate', 0.1) # learning decay rate
+        self.decay_interval = configuration.get('decay_interval', 1000) # scheduled learning decay interval
         self.lambda_1 = configuration.get('lambda_1', 1e-3) # L1 regularisation
         self.lambda_2 = configuration.get('lambda_2', 1e-3) # L2 regularisation
         self.beta_1 = configuration.get('beta_1', 0.9) # momentum gradient descent
         self.beta_2 = configuration.get('beta_2', 0.99) # root-mean-square propagation
-        self.batches = configuration.get('batches', 1)
-        self.iterations = configuration.get('iterations', int(1e3))
-        self.verbose = configuration.get('verbose', True)
+        self.batches = configuration.get('batches', 1) # number of mini-batches
+        self.iterations = configuration.get('iterations', int(1e3)) # number of iterations
+        self.verbose = configuration.get('verbose', True) # print costs
 
         self.epsilon = 1e-8
 
@@ -29,6 +32,17 @@ class Perceptron:
         assert mx == my, 'Number of examples of X and y must be equal'
         self.nc = int(np.max(np.sum(y, axis=0, keepdims=True)))
         
+        self.i = 1
+        self.t = 1
+        self.v = {}
+        self.s = {}
+        self.parameters = {}
+        self.gradients = {}
+        self.caches = []
+        self.costs = []
+
+        self.alpha = self.alpha_0
+
         self.units = [self.nx] + self.units + [self.ny]
 
         self.subtype = ''
@@ -42,14 +56,6 @@ class Perceptron:
         else: # regressor
             self.activations = ['linear'] + self.activations + ['linear']
 
-        self.t = 1
-        self.v = {}
-        self.s = {}
-        self.parameters = {}
-        self.gradients = {}
-        self.caches = []
-        self.costs = []
-
         L = len(self.activations)
         for l in range(1, L):
             self.parameters['W' + str(l)] = np.random.randn(self.units[l], self.units[l - 1]) / np.sqrt(self.units[l - 1]) # He initialisation
@@ -60,7 +66,7 @@ class Perceptron:
             self.v["db" + str(l)] = np.zeros_like(self.parameters["b" + str(l)])
             self.s["dW" + str(l)] = np.zeros_like(self.parameters["W" + str(l)])
             self.s["db" + str(l)] = np.zeros_like(self.parameters["b" + str(l)])
-    
+        
     def create_batches(self):
 
         X = self.data[0]
@@ -216,6 +222,16 @@ class Perceptron:
         
         self.t += 1
     
+    def decay_alpha(self):
+        
+        if self.decay:
+            if self.decay == 'exponential':
+                self.alpha = self.alpha_0 * (1 / (1 + self.decay_rate * self.i))
+            elif self.decay == 'scheduled':
+                self.alpha = self.alpha_0 * (1 / (1 + self.decay_rate * (self.i // self.decay_interval)))
+        
+        self.i += 1
+
     def train_model(self, X, y):
 
         self.initialise_model(X, y)
@@ -233,6 +249,8 @@ class Perceptron:
                 self.update_parameters()
 
                 cost += self.compute_cost()
+
+            self.decay_alpha()
 
             if (i % 1000 == 0):
                 self.costs.append(cost / self.batches)
