@@ -19,4 +19,5 @@ __pycache__/
 *.pyo
 
 dump.txt
+saves/
 verification/
