@@ -27,8 +27,8 @@ _17 Jun 24: Mini-batch gradient descent was added. Faster convergence rates were
 
 ## Adam Optimisation
 
-![image](https://github.com/obdwinston/Multilayer-Perceptron/assets/104728656/f03de763-d9f4-4763-b37d-8943d3bcb10b)
-_18 Jun 24: Adam optimisation was added. All Adam cases converged much faster to lower costs, and peak accuracy was achieved with the first Adam case (β₁ = 0.9, β₂ = 0.99). Of note, zero betas do not correspond to vanilla gradient descent, due to a resulting scaling factor acting on the learning rate that is dependent on both epsilon (small value to prevent division by zero in Adam) and the gradient itself:_ $W=W-\alpha(\frac{1}{|dW| + \epsilon})dW$.
+![adam](https://github.com/obdwinston/Multilayer-Perceptron/assets/104728656/66a833a9-816f-4218-811d-47b493f1918d)
+_18 Jun 24: Adam optimisation was added. All Adam cases converged much faster to lower costs, and highest accuracy was achieved with the first Adam case (β₁ = 0.9, β₂ = 0.99). The lower accuracy of all Adam cases compared to vanilla gradient descent may be attributed to overfitment, which can be mitigated by early stopping at a much lower iteration. Of note, zero betas do not correspond to vanilla gradient descent, due to a resulting scaling factor acting on the learning rate that is dependent on both epsilon (small value to prevent division by zero in Adam) and the gradient itself:_ $W=W-\alpha(\frac{1}{|dW| + \epsilon})dW$.
 
 ## Learning Rate Decay
 
