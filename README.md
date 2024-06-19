@@ -15,10 +15,10 @@ Multilayer perceptron to solve classification and regression problems.
 ![animation](https://github.com/obdwinston/Multilayer-Perceptron/assets/104728656/d9d2cff9-ec53-461d-b136-94a981ca94f3)
 _The baseline verification was performed with [Scikit-Learn's MLPClassifier](https://scikit-learn.org/stable/modules/generated/sklearn.neural_network.MLPClassifier.html) on a generated dataset (3 features, 4 classes). Test accuracy scores for both models were about 0.9, with comparable runtimes._
 
-## Mini-Batch Gradient Descent
+## Adam Optimisation
 
-![minibatch](https://github.com/obdwinston/Multilayer-Perceptron/assets/104728656/901b83af-027d-4154-a24f-b320df1f7c9d)
-_Faster convergence rates were achieved with increasing batches, but converged at higher costs. Peak accuracy was achieved with 2 batches, with no further incentive to increase batches (and hence runtimes) with decreasing accuracy._
+![adam](https://github.com/obdwinston/Multilayer-Perceptron/assets/104728656/66a833a9-816f-4218-811d-47b493f1918d)
+_All Adam cases converged much faster to lower costs, and highest accuracy was achieved with the first Adam case (β₁ = 0.9, β₂ = 0.99). The lower accuracy of all Adam cases compared to vanilla gradient descent may be attributed to overfitment, which can be mitigated by early stopping at a much lower iteration. Of note, zero betas do not correspond to vanilla gradient descent, due to a resulting scaling factor acting on the learning rate that is dependent on both epsilon (small value to prevent division by zero in Adam) and the gradient itself:_ $W=W-\alpha(\frac{1}{|dW| + \epsilon})dW$.
 
 ## L1/L2 Regularisation
 
@@ -30,10 +30,10 @@ _Decreasing regularisation increased converged cost. Peak accuracy was achieved 
 ![image](https://github.com/obdwinston/Multilayer-Perceptron/assets/104728656/e9d0caee-2ae9-4714-8709-5b8a2d770cf1)
 _A fair bit of noise was introduced to the cost, which is expected given the random dropouts. The effect of increasing regularisation with higher dropout (lower keep probability) can be inferred from the increasing converged costs. Slightly higher average accuracy was achieved for dropout cases, likely because regularisation tends to reduce overfitment._
 
-## Adam Optimisation
+## Mini-Batch Gradient Descent
 
-![adam](https://github.com/obdwinston/Multilayer-Perceptron/assets/104728656/66a833a9-816f-4218-811d-47b493f1918d)
-_All Adam cases converged much faster to lower costs, and highest accuracy was achieved with the first Adam case (β₁ = 0.9, β₂ = 0.99). The lower accuracy of all Adam cases compared to vanilla gradient descent may be attributed to overfitment, which can be mitigated by early stopping at a much lower iteration. Of note, zero betas do not correspond to vanilla gradient descent, due to a resulting scaling factor acting on the learning rate that is dependent on both epsilon (small value to prevent division by zero in Adam) and the gradient itself:_ $W=W-\alpha(\frac{1}{|dW| + \epsilon})dW$.
+![minibatch](https://github.com/obdwinston/Multilayer-Perceptron/assets/104728656/901b83af-027d-4154-a24f-b320df1f7c9d)
+_Faster convergence rates were achieved with increasing batches, but converged at higher costs. Peak accuracy was achieved with 2 batches, with no further incentive to increase batches (and hence runtimes) with decreasing accuracy._
 
 ## Learning Rate Decay
 
