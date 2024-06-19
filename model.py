@@ -7,20 +7,20 @@ class Perceptron:
     
     def __init__(self, configuration):
 
-        self.type = configuration.get('type', 'classifier') # model type {'classifier', 'regressor'}
-        self.units = configuration.get('units', [10]) # hidden units
-        self.activations = configuration.get('activations', ['relu']) # hidden activations {'relu', 'tanh', 'sigmoid', 'linear'}
-        self.alpha_0 = configuration.get('alpha_0', 0.01) # initial learning rate
-        self.decay = configuration.get('decay', None) # learning decay type {None, 'exponential', 'scheduled'}
-        self.decay_rate = configuration.get('decay_rate', 0.1) # learning decay rate
-        self.decay_interval = configuration.get('decay_interval', 1000) # scheduled learning decay interval
-        self.lambda_1 = configuration.get('lambda_1', 1e-3) # L1 regularisation
-        self.lambda_2 = configuration.get('lambda_2', 1e-3) # L2 regularisation
-        self.beta_1 = configuration.get('beta_1', 0.9) # momentum gradient descent
-        self.beta_2 = configuration.get('beta_2', 0.99) # root-mean-square propagation
-        self.batches = configuration.get('batches', 1) # number of mini-batches
-        self.iterations = configuration.get('iterations', int(1e3)) # number of iterations
-        self.verbose = configuration.get('verbose', True) # print costs
+        self.type = configuration.get('type', 'classifier')                 # model type {'classifier', 'regressor'}
+        self.units = configuration.get('units', [10])                       # hidden units
+        self.activations = configuration.get('activations', ['relu'])       # hidden activations {'relu', 'tanh', 'sigmoid', 'linear'}
+        self.alpha_0 = configuration.get('alpha_0', 0.01)                   # initial learning rate
+        self.decay = configuration.get('decay', None)                       # learning decay type {None, 'exponential', 'scheduled'}
+        self.decay_rate = configuration.get('decay_rate', 0.1)              # learning decay rate
+        self.decay_interval = configuration.get('decay_interval', 1000)     # scheduled learning decay interval
+        self.lambda_1 = configuration.get('lambda_1', 1e-3)                 # L1 regularisation
+        self.lambda_2 = configuration.get('lambda_2', 1e-3)                 # L2 regularisation
+        self.beta_1 = configuration.get('beta_1', 0.9)                      # momentum gradient descent
+        self.beta_2 = configuration.get('beta_2', 0.99)                     # root-mean-square propagation
+        self.batches = configuration.get('batches', 1)                      # number of mini-batches
+        self.iterations = configuration.get('iterations', int(1e3))         # number of iterations
+        self.verbose = configuration.get('verbose', True)                   # print costs
 
         self.epsilon = 1e-8
 
