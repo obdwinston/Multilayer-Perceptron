@@ -16,6 +16,7 @@ class Perceptron:
         self.decay_interval = configuration.get('decay_interval', 1000)     # scheduled learning decay interval
         self.lambda_1 = configuration.get('lambda_1', 1e-3)                 # L1 regularisation
         self.lambda_2 = configuration.get('lambda_2', 1e-3)                 # L2 regularisation
+        self.keep_prob = configuration.get('keep_prob', 1)                  # dropout regularisation keep probability
         self.beta_1 = configuration.get('beta_1', 0.9)                      # momentum gradient descent
         self.beta_2 = configuration.get('beta_2', 0.99)                     # root-mean-square propagation
         self.batches = configuration.get('batches', 1)                      # number of mini-batches
@@ -104,22 +105,41 @@ class Perceptron:
                 E = np.exp(Z - np.max(Z, axis=0, keepdims=True))
                 return E / np.sum(E, axis=0, keepdims=True)
             else: return Z # linear
-                
+        
+        # hidden layers
         A_prev = self.X
         L = len(self.activations)
-        for l in range(1, L):
+
+        for l in range(1, L - 1):
             W = self.parameters['W' + str(l)]
             b = self.parameters['b' + str(l)]
             Z = np.dot(W, A_prev) + b
 
-            cache = (A_prev, W, b, Z)
-            self.caches.append(cache)
-
             activation = self.activations[l]
             A = activate(Z, activation)
 
+            # dropout regularisation
+            D = np.random.rand(A.shape[0], A.shape[1])
+            D = (D < self.keep_prob).astype(int)
+            A *= D # drop neurons below keep probability
+            A /= self.keep_prob # scale surviving neurons by keep probability
+
+            cache = (A_prev, W, b, Z, D)
+            self.caches.append(cache)
+            
             A_prev = A
         
+        # output layer
+        W = self.parameters['W' + str(L - 1)]
+        b = self.parameters['b' + str(L - 1)]
+        Z = np.dot(W, A_prev) + b
+
+        activation = self.activations[L - 1]
+        A = activate(Z, activation)
+
+        cache = (A_prev, W, b, Z)
+        self.caches.append(cache)
+
         self.AL = A
 
     def compute_cost(self):
@@ -167,6 +187,7 @@ class Perceptron:
                 return S - self.y # dAdZ = dZ since dA set to 1 for softmax
             else: return np.ones_like(A) # linear
         
+        # output layer
         A = self.AL
         if self.subtype == 'multilabel':
             dA = -(self.y / (self.AL + self.epsilon) - (1 - self.y) / (1 - self.AL + self.epsilon)) # logistic loss derivative
@@ -176,22 +197,38 @@ class Perceptron:
             dA = self.AL - self.y # mse loss derivative
         
         L = len(self.activations)
-        for l in reversed(range(1, L)):
+        activation = self.activations[L - 1]
+        A_prev, W, b, Z = self.caches[L - 2]
+        
+        dAdZ = derivative(A, Z, activation)
+        dZ = dA * dAdZ # dA set to 1 for softmax
+        dW = (1 / self.m) * np.dot(dZ, A_prev.T) + (self.lambda_2 / self.m) * W + (self.lambda_1 / self.m) * np.sign(W)
+        db = (1 / self.m) * np.sum(dZ, axis=1, keepdims=True)
+        self.gradients['dW' + str(L - 1)] = dW
+        self.gradients['db' + str(L - 1)] = db
+
+        # hidden layers
+        A = A_prev
+        dA = np.dot(W.T, dZ) # W^[l] = dZ^[l] / dA^[l - 1]
+        
+        for l in reversed(range(1, L - 1)):
             activation = self.activations[l]
-            A_prev, W, b, Z = self.caches[l - 1]
+            A_prev, W, b, Z, D = self.caches[l - 1]
+
+            # dropout regularisation
+            dA *= D
+            dA /= self.keep_prob
 
             dAdZ = derivative(A, Z, activation)
-            dZ = dA * dAdZ # dA set to 1 for softmax
-
+            dZ = dA * dAdZ
             dW = (1 / self.m) * np.dot(dZ, A_prev.T) + (self.lambda_2 / self.m) * W + (self.lambda_1 / self.m) * np.sign(W)
             db = (1 / self.m) * np.sum(dZ, axis=1, keepdims=True)
-
             self.gradients['dW' + str(l)] = dW
             self.gradients['db' + str(l)] = db
 
             A = A_prev
             dA = np.dot(W.T, dZ) # W^[l] = dZ^[l] / dA^[l - 1]
-        
+
     def update_parameters(self):
         
         v_corrected = {}
