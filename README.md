@@ -5,7 +5,7 @@ Multilayer perceptron to solve classification and regression problems.
 - [x] Single/Multioutput Regression
 - [x] Binary/Multilabel/Multiclass Classification
 - [x] L1/L2 Regularisation
-- [ ] Dropout Regularisation
+- [x] Dropout Regularisation
 - [x] Mini-Batch Gradient Descent (GD)
 - [x] Adam Optimisation (Momentum GD + RMS Propagation)
 - [x] Learning Rate Decay
@@ -34,3 +34,8 @@ _18 Jun 24: Adam optimisation was added. All Adam cases converged much faster to
 
 ![image](https://github.com/obdwinston/Multilayer-Perceptron/assets/104728656/2e5764f1-a424-42d3-9b6d-26a3d011bbcb)
 _19 Jun 24: Learning rate decay was added. Exponential decay resulted in the slowest convergence rate due to the rapid decrease in learning rate. Scheduled decay had a fast initial convergence rate, while gradually reducing (or relaxing) the learning rate in a step-wise manner._
+
+## Dropout Regularisation
+
+![image](https://github.com/obdwinston/Multilayer-Perceptron/assets/104728656/e9d0caee-2ae9-4714-8709-5b8a2d770cf1)
+_20 Jun 24: Dropout regularisation was added. A fair bit of noise was introduced to the cost, which is expected given the random dropouts. The effect of increasing regularisation with higher dropout (lower keep probability) can be inferred from the increasing converged costs. Slightly higher average accuracy was achieved for dropout cases, likely because regularisation tends to reduce overfitment._
