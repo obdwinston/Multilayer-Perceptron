@@ -9,8 +9,6 @@ Multilayer perceptron to solve classification and regression problems.
 - [x] Mini-Batch Gradient Descent (GD)
 - [x] Adam Optimisation (Momentum GD + RMS Propagation)
 - [x] Learning Rate Decay
-- [ ] Batch Normalisation
-- [ ] and more...
 
 ![animation](https://github.com/obdwinston/Multilayer-Perceptron/assets/104728656/d9d2cff9-ec53-461d-b136-94a981ca94f3)
 _The baseline verification was performed with [Scikit-Learn's MLPClassifier](https://scikit-learn.org/stable/modules/generated/sklearn.neural_network.MLPClassifier.html) on a generated dataset (3 features, 4 classes). Test accuracy scores for both models were about 0.9, with comparable runtimes._

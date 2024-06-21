@@ -35,17 +35,17 @@ configuration = {
     'type': 'classifier',
     'units': [20, 13, 7, 5],
     'activations': ['tanh'] * 4,
-    'alpha_0': 1e-2,
+    'alpha_0': 1e-3,
     'decay': 'scheduled',
     'decay_rate': 0.05,
     'decay_interval': 500,
-    'lambda_1': 0.4,
-    'lambda_2': 0.4,
+    'lambda_1': 0.01,
+    'lambda_2': 0.01,
     'keep_prob': 1,
     'beta_1': 0.9,
     'beta_2': 0.99,
     'batches': 1,
-    'iterations': int(1e5),
+    'iterations': int(1e4),
     'verbose': True
 }
 
@@ -65,10 +65,10 @@ print('Running Scikit model...')
 mlp = MLPClassifier(
     hidden_layer_sizes=(20, 13, 7, 5),
     activation='tanh',
-    max_iter=int(1e6),
-    n_iter_no_change=int(1e5),
+    max_iter=int(1e5),
+    n_iter_no_change=int(1e4),
     tol=1.,
-    alpha=0.3, # regularisation
+    alpha=0.01, # regularisation
     random_state=42,
     verbose=False)
 mlp.fit(X_train, y_train)

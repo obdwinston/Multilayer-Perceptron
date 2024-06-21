@@ -16,7 +16,7 @@ class Perceptron:
         self.decay_interval = configuration.get('decay_interval', 1000)     # scheduled learning decay interval
         self.lambda_1 = configuration.get('lambda_1', 1e-3)                 # L1 regularisation
         self.lambda_2 = configuration.get('lambda_2', 1e-3)                 # L2 regularisation
-        self.keep_prob = configuration.get('keep_prob', 1)                  # dropout regularisation keep probability
+        self.keep_prob = configuration.get('keep_prob', 1)                  # dropout regularisation
         self.beta_1 = configuration.get('beta_1', 0.9)                      # momentum gradient descent
         self.beta_2 = configuration.get('beta_2', 0.99)                     # root-mean-square propagation
         self.batches = configuration.get('batches', 1)                      # number of mini-batches
