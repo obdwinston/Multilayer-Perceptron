@@ -1,6 +1,8 @@
 # Multilayer Perceptron
 
-Multilayer perceptron to solve classification and regression problems.
+![image](https://github.com/obdwinston/Multilayer-Perceptron/assets/104728656/b25c6273-99df-4ea5-915a-df10526028de)
+
+Simple feedforward neural network with fully-connected layers to solve classification and regression problems.
 
 - [x] Single/Multioutput Regression
 - [x] Binary/Multilabel/Multiclass Classification
@@ -10,7 +12,7 @@ Multilayer perceptron to solve classification and regression problems.
 - [x] Adam Optimisation (Momentum GD + RMS Propagation)
 - [x] Learning Rate Decay
 
-![animation](https://github.com/obdwinston/Multilayer-Perceptron/assets/104728656/d9d2cff9-ec53-461d-b136-94a981ca94f3)
+![animation](https://github.com/obdwinston/Multilayer-Perceptron/assets/104728656/93a4f80a-54dc-4258-9bf5-b6e4d68c7b36)
 _The baseline verification was performed with [Scikit-Learn's MLPClassifier](https://scikit-learn.org/stable/modules/generated/sklearn.neural_network.MLPClassifier.html) on a generated dataset (3 features, 4 classes). Test accuracy scores for both models were about 0.9, with comparable runtimes._
 
 ## Adam Optimisation
