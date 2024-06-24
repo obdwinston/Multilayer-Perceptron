@@ -2,7 +2,7 @@
 
 ![image](https://github.com/obdwinston/Multilayer-Perceptron/assets/104728656/b25c6273-99df-4ea5-915a-df10526028de)
 
-Simple feedforward neural network with fully-connected layers to solve classification and regression problems.
+Standard feedforward neural network with fully-connected layers to solve classification and regression problems.
 
 - [x] Single/Multioutput Regression
 - [x] Binary/Multilabel/Multiclass Classification

@@ -273,10 +273,11 @@ class Perceptron:
 
         self.initialise_model(X, y)
 
-        mini_batches = self.create_batches()
-
         for i in range(self.iterations):
+            
             cost = 0
+            mini_batches = self.create_batches()
+            
             for mini_batch in mini_batches:
                 self.X, self.y = mini_batch
                 _, self.m = self.X.shape
