@@ -13,8 +13,6 @@ Standard feedforward neural network with fully-connected layers to solve classif
 ![animation](https://github.com/obdwinston/Multilayer-Perceptron/assets/104728656/93a4f80a-54dc-4258-9bf5-b6e4d68c7b36)
 _The baseline verification was performed with [Scikit-Learn's MLPClassifier](https://scikit-learn.org/stable/modules/generated/sklearn.neural_network.MLPClassifier.html) on a generated dataset (3 features, 4 classes). Test accuracy scores for both models were about 0.9, with comparable runtimes._
 
-![image](https://github.com/obdwinston/Multilayer-Perceptron/assets/104728656/b25c6273-99df-4ea5-915a-df10526028de)
-
 ## Adam Optimisation
 
 ![image](https://github.com/obdwinston/Multilayer-Perceptron/assets/104728656/66a833a9-816f-4218-811d-47b493f1918d)
