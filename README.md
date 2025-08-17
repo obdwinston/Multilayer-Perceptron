@@ -1,4 +1,4 @@
-Standard feedforward neural network with fully-connected layers implemented from scratch to solve classification and regression problems.
+Multilayer perception coded from scratch. Standard feedforward neural network to solve classification and regression problems.
 
 - [x] Single/Multioutput Regression
 - [x] Binary/Multilabel/Multiclass Classification
